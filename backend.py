@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from websocket import create_connection
 import json
+from queue import Queue
+from threading import Thread
 from time import sleep
 
 load_dotenv()
@@ -11,23 +13,14 @@ clientSecret = os.getenv("CLIENT_SECRET")
 print("clientId: ", clientId)
 print("clientSecret: ", clientSecret)
 
-# WebSocket connection
-ws = create_connection("wss://localhost:6868")
+# WebSocket connection with SSL verification disabled
+ws = create_connection("wss://localhost:6868", sslopt={"cert_reqs": 0})
+
 def send_message(j):
     j = json.dumps(j)
     ws.send(j)
     response = ws.recv()
     return response
-
-# Function to send data to another service via WebSocket
-def send_to_another_service(data,ws):
-    try:
-        ws.send(json.dumps(data))
-        response = ws.recv()
-        print("Sent data:", data)
-        print("Received response:", response)
-    except Exception as e:
-        print("Error sending data:", e)
 
 # Request access to Cortex
 getCortexToken = send_message({
@@ -106,19 +99,20 @@ print("Sent")
 print("Receiving...")
 
 # Continuously receive and process data
-while True:
-    result = ws.recv()
-    result = json.loads(result)
-    print(result)
+def process_data(queue):
+    while True:
+        result = ws.recv()
+        result = json.loads(result)
+        print(result)
 
-    if "com" in result:
-        action = result["com"][0]
-        power = result["com"][1]
-        print("Action:", action)
-
-        if action=='lift':
+        if "com" in result:
+            action = result["com"][0]
+            power = result["com"][1]
             print("Action:", action)
-     # Adjust sleep time as needed
-    
 
-ws.close()
+            if action == 'lift':
+                queue.put('move_up')
+            else:
+                queue.put('stay')  # Send 'stay' command if action is not 'lift'
+            
+        sleep(0.1)  # Adjust sleep time as needed
