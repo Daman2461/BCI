@@ -4,14 +4,14 @@ import math
 import threading
 import queue
 import backend
-
+import sys
 # Initialize Pygame
 pygame.init()
 
 # Screen dimensions
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 600
-
+FONT = pygame.font.SysFont('consolas', 50)
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -88,7 +88,9 @@ def main():
     obstacles = pygame.sprite.Group()
     spawn_timer = 0
     scroll = 0
-
+    p=False
+    run=True
+    c=0
     # Start WebSocket in a separate thread
     ws_thread = threading.Thread(target=backend.process_data, args=(command_queue,))
     ws_thread.start()
@@ -98,42 +100,88 @@ def main():
     command_thread.start()
 
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        
 
         # Update game state
-        all_sprites.update()
-        obstacles.update()
+        if run==True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-        # Check for collisions
-        if pygame.sprite.spritecollideany(player, obstacles):
-            running = False
-            continue
+                elif event.type == pygame.KEYDOWN:
+                        
+                        if event.key==pygame.K_p:
+                            p=True
+                            run=False
+            all_sprites.update()
+            obstacles.update()
 
-        # Spawn obstacles
-        spawn_timer += 1
-        if spawn_timer > 100:
-            obstacle = Obstacle()
-            all_sprites.add(obstacle)
-            obstacles.add(obstacle)
-            spawn_timer = 0
+            # Check for collisions
+            if pygame.sprite.spritecollideany(player, obstacles):
+                run = False
+                continue
 
-        # Scrolling background image
-        for i in range(tiles):
-            screen.blit(background_image, (i * bg_width + scroll, 0))
-        scroll -= 4
-        if abs(scroll) > bg_width:
-            scroll = 0
+            # Spawn obstacles
+            spawn_timer += 1
+            if spawn_timer > 100:
+                c+=1
+                obstacle = Obstacle()
+                all_sprites.add(obstacle)
+                obstacles.add(obstacle)
+                spawn_timer = 0
 
-        # Draw everything
-        all_sprites.draw(screen)
-        pygame.display.flip()
+            # Scrolling background image
+            for i in range(tiles):
+                screen.blit(background_image, (i * bg_width + scroll, 0))
+            scroll -= 4
+            if abs(scroll) > bg_width:
+                scroll = 0
 
-        # Cap the frame rate
-        clock.tick(25)
+            # Draw everything
+            all_sprites.draw(screen)
+            score=FONT.render(str(c),1,WHITE)
+            screen.blit(score,(SCREEN_WIDTH//2-20 , 50))
+            pygame.display.flip()
+
+            # Cap the frame rate
+            clock.tick(25)
+        else:
+            if p==False:
+                screen.blit(FONT.render("""PRESS SPACE TO RESTART """,1,WHITE),(125,SCREEN_HEIGHT//2))
+                 
+                pygame.display.flip()
+            else:
+                screen.blit(FONT.render("""PRESS SPACE TO RESUME """,1,WHITE),(125,SCREEN_HEIGHT//2))
+                pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        running = True
+                        clock = pygame.time.Clock()
+                        player = Player()
+                        all_sprites = pygame.sprite.Group()
+                        all_sprites.add(player)
+                        obstacles = pygame.sprite.Group()
+                        spawn_timer = 0
+                        scroll = 0
+                        
+                        run=True
+                        
+                        if p==False: 
+                            c=0
+                            continue
+                        else:
+                            
+                            p=False
+                            continue
+
 
     pygame.quit()
+    
+    sys.exit()
+    quit()
 
 if __name__ == '__main__':
     main()
