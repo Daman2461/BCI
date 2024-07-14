@@ -25,7 +25,20 @@ background_image = pygame.image.load('bg.png').convert()
 bg_width = background_image.get_width()
 
 tiles = math.ceil(SCREEN_WIDTH / bg_width)
-dinosaur_image = pygame.image.load('doraemon.png')
+def load_sprite_sheet(sheet, frame_width, frame_height, num_frames):
+    frames = []
+    sheet_width, sheet_height = sheet.get_size()
+    for i in range(num_frames):
+        frame = sheet.subsurface(pygame.Rect(i * frame_width, 0, frame_width, frame_height))
+        scaled_frame = pygame.transform.scale(frame, (128, 128))
+        frames.append(scaled_frame)
+         
+    return frames
+
+
+sprite_sheet = pygame.image.load('run.png')
+running_frames = load_sprite_sheet(sprite_sheet, 32, 32, 12)
+
 obstacle_image = pygame.image.load('obstacle.png')
 jump_sound = pygame.mixer.Sound('jump_sound.wav')
 
@@ -33,14 +46,19 @@ jump_sound = pygame.mixer.Sound('jump_sound.wav')
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = dinosaur_image
+
+        self.frames = running_frames
+        self.image = self.frames[0] 
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = SCREEN_HEIGHT - 120
-        self.jump_speed = -18
+        self.jump_speed = -25            
         self.gravity = 1
         self.velocity = 0
         self.jumping = False
+        self.frame_index = 0
+        self.animation_speed = 0.7
+        self.time = 0
 
     def jump(self):
         if not self.jumping:
@@ -54,6 +72,12 @@ class Player(pygame.sprite.Sprite):
         if self.rect.y >= SCREEN_HEIGHT - 120:
             self.rect.y = SCREEN_HEIGHT - 120
             self.jumping = False
+
+        self.time += self.animation_speed
+        if self.time >= 1:
+            self.time = 0
+            self.frame_index = (self.frame_index + 1) % len(self.frames)
+            self.image = self.frames[self.frame_index]
 
 # Obstacle class
 class Obstacle(pygame.sprite.Sprite):
