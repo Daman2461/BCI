@@ -12,7 +12,8 @@ This project integrates the Emotiv Epoc X headset with a Pygame-based game, allo
 - **Customizable**: Easily modify the game and BCI interactions.
 
 ## Requirements
-
+- Emotiv EPOC X
+- Cortex Apps API 
 - Python 3.8 or higher
 - `dotenv`
 - `websocket-client`
