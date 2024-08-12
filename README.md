@@ -54,7 +54,7 @@ This project integrates the Emotiv Epoc X headset with a Pygame-based game, allo
 
 2. Start the Pygame application:
     ```bash
-    python game.py
+    python menu.py
     ```
 
 ## Project Structure
