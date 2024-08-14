@@ -61,4 +61,5 @@ This project integrates the Emotiv Epoc X headset with a Pygame-based game, allo
 
 - `backend.py`: Handles the connection to the Emotiv Epoc X headset, authorization, session creation, and data streaming.
 - `game.py`: Contains the Pygame-based game logic, including player and obstacle handling, background scrolling, and BCI command processing.
-
+CLIENT_ID=Hhdwalj8lzNtOMmk72n60wukErsKffcOPXgWGAlE
+CLIENT_SECRET=7YsrsLQGRjH0cwC8bNE3iOlGgWlytxWgyNLv9ysvsDcrmy7pWjEyhn3AwZNb47G895Tim3JDh2lsHmAQSe5lkk7pgQsqS5ABAPF2YiieUlmTbVxlhdNPwJbNCQExcnz3
