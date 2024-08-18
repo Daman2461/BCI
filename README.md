@@ -10,6 +10,12 @@ This project integrates the Emotiv Epoc X headset with a Pygame-based game, allo
 - **BCI Integration**: Connects to the Emotiv Epoc X headset to receive and process BCI signals.
 - **Real-time Game Control**: Uses BCI signals to control the game character.
 - **Customizable**: Easily modify the game and BCI interactions.
+- **Running Animation:** Utilized sprite sheets to create fluid running animations for the player character.
+- **Obstacle Generation:** Added dynamic obstacles that challenge players and require timely jumps to avoid collisions.
+- **Scrolling Background:** Implemented a continuous scrolling background to enhance the immersive experience.
+- **Game Modes:** Designed both Endless and Timed game modes with separate scripts, providing varied gameplay experiences.
+- **Score Tracking:** Included real-time score tracking and a final score display upon game completion.
+
 
 ## Requirements
 - Emotiv EPOC X
