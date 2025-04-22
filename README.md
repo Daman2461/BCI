@@ -2,6 +2,9 @@
 
 https://github.com/user-attachments/assets/6e6bce61-94d3-4159-8985-d962da73f52e
 
+![IMG_4103](https://github.com/user-attachments/assets/02e1b40a-949b-4237-abf4-84bafcf4818c)
+
+
 
 This project integrates the Emotiv Epoc X headset with a Pygame-based game, allowing users to control the game using Brain-Computer Interface (BCI) technology. The goal is to create games for disabled individuals that can be controlled using the Emotiv headset.
 
